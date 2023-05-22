@@ -23,7 +23,6 @@ markets * regions = cost_per_request
 """
 
 class Game:
-
     def __init__(self, game):
         if game:
             self.game = game
@@ -41,7 +40,6 @@ class Game:
             self.arbitage_available = False
             self.arbitage_bookeeper_left = None
             self.arbitage_bookeeper_right = None
-
     def find_arbitrage(self):
         h2h_1   = None
         h2h_2   = None
