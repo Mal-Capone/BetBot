@@ -65,6 +65,7 @@ class Game:
             for bookmaker in self.available_bookmakers:
                 markets = bookmaker['markets'][0]
                 o['game'] = self.id
+
 def get_response(regions=None,quota=False):
     try:
         API_KEY     = os.environ.get('THE_ODDS_API_KEY')
@@ -94,29 +95,28 @@ def get_response(regions=None,quota=False):
         return None
 
 def findMatches(count, regions, outcomes):
-    verbose = False
+    verbose = True
     i = 0
     count += 1
-    all_games  = []
     game_odds  = {}
 
     odds_response = get_response(regions=regions)
-    for game in odds_response:
-        if len(game['bookmakers'][0]['markets'][0]['outcomes']) <= outcomes:
-            all_games.append(Game(game))
     all_games = [Game(game) for game in odds_response if len(game['bookmakers'][0]['markets'][0]['outcomes']) <= outcomes]
+    # for game in odds_response:
+    # all_games  = []
+    #     if len(game['bookmakers'][0]['markets'][0]['outcomes']) <= outcomes:
+    #         all_games.append(Game(game))
     for game in all_games:
         i += 1
-
         outcomes = []
-        pr.ok(f'[{i}]  {str(game.sport).title()}: ({game.team_a}) vs ({game.team_b}) | Start Time: {game.start_date} {str(game.start_time).strip("Z")} | Checking {len(game.available_bookmakers)} bookmakers')
+        pr.ok(f'[{str(i).ljust(2,"0")}]  {str(game.sport).title()}: ({game.team_a}) vs ({game.team_b}) | Start Time: {game.start_date} {str(game.start_time).strip("Z")} | Checking {len(game.available_bookmakers)} bookmakers')
         for bookmaker in game.available_bookmakers:
             result = {
                 'bookmaker_key': bookmaker['key'],
                 'outcomes': {
-                                'team_a_name': bookmaker['markets'][0]['outcomes'][0]['name'],
+                                'team_a_name':  bookmaker['markets'][0]['outcomes'][0]['name'],
                                 'team_a_price': bookmaker['markets'][0]['outcomes'][0]['price'],
-                                'team_b_name': bookmaker['markets'][0]['outcomes'][1]['name'],
+                                'team_b_name':  bookmaker['markets'][0]['outcomes'][1]['name'],
                                 'team_b_price': bookmaker['markets'][0]['outcomes'][1]['price']
                             }}
             outcomes.append(result)
@@ -125,9 +125,7 @@ def findMatches(count, regions, outcomes):
                     print(f'\t > {result["outcomes"]["team_a_name"]} : {str(result["outcomes"]["team_a_price"]).ljust(4,"0")} | {result["outcomes"]["team_b_name"]} : {str(result["outcomes"]["team_b_price"]).ljust(4,"0")} : {bookmaker["title"]} ')
             game_odds[game.id] = outcomes
     return game_odds, all_games
-
 def get_results(regions='all', outcomes=2):
-
     """
         Finds all the current available bets which match the criteria for a surebet
         :max_tries: user input field, maximum number of api calls warranted, if set to 0 then will loop infinite, default is 10
