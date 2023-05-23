@@ -20,7 +20,7 @@ def about():
 
 @app.route('/results')
 def results():
-    o, r = builder.results_form()
+    o, r = builder.results_form(region='All',outcomes=2)
     html = render_template('results.html', results='No Bets Checked', OUTCOMES=o, REGIONS=r)
     return html
 
@@ -35,6 +35,9 @@ def bets():
         total = int(quota) + int(used_req)
         o, r = builder.results_form(regions,outcomes)
         html = render_template("results.html", QUOTA=f'{quota} / {total}', COST=this_cost, REGIONS=r, OUTCOMES=o)
+        return html
+    else:
+        html = render_template('results.html',results='No Bets Checked')
         return html
 
 if __name__ == '__main__':

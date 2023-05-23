@@ -1,3 +1,4 @@
+# ----- Utils for CLi Printing -----#
 import sys
 import time
 from io import BytesIO

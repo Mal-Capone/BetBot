@@ -1,3 +1,4 @@
+# the-odds-api.com
 # -----------IMPORTS----------#
 import os
 import requests
@@ -23,7 +24,6 @@ markets * regions = cost_per_request
 """
 
 class Game:
-
     def __init__(self, game):
         if game:
             self.game = game
@@ -41,7 +41,6 @@ class Game:
             self.arbitage_available = False
             self.arbitage_bookeeper_left = None
             self.arbitage_bookeeper_right = None
-
     def find_arbitrage(self):
         h2h_1   = None
         h2h_2   = None
@@ -66,7 +65,6 @@ class Game:
             for bookmaker in self.available_bookmakers:
                 markets = bookmaker['markets'][0]
                 o['game'] = self.id
-
 def get_response(regions=None,quota=False):
     try:
         API_KEY     = os.environ.get('THE_ODDS_API_KEY')
@@ -96,6 +94,7 @@ def get_response(regions=None,quota=False):
         return None
 
 def findMatches(count, regions, outcomes):
+    verbose = False
     i = 0
     count += 1
     all_games  = []
@@ -122,7 +121,8 @@ def findMatches(count, regions, outcomes):
                             }}
             outcomes.append(result)
             if result:
-                print(f'\t > {result["outcomes"]["team_a_name"]} : {str(result["outcomes"]["team_a_price"]).ljust(4,"0")} | {result["outcomes"]["team_b_name"]} : {str(result["outcomes"]["team_b_price"]).ljust(4,"0")} : {bookmaker["title"]} ')
+                if verbose:
+                    print(f'\t > {result["outcomes"]["team_a_name"]} : {str(result["outcomes"]["team_a_price"]).ljust(4,"0")} | {result["outcomes"]["team_b_name"]} : {str(result["outcomes"]["team_b_price"]).ljust(4,"0")} : {bookmaker["title"]} ')
             game_odds[game.id] = outcomes
     return game_odds, all_games
 
@@ -139,8 +139,6 @@ def get_results(regions='all', outcomes=2):
     game_odds, all_games = findMatches(100,regions, outcomes)
     for game_id, all_game_odds in game_odds.items():
         game = [x for x in all_games if x.id == game_id][0]
-        game.team_a_average_price = round(mean([p['outcomes']['team_a_price'] for p in all_game_odds]),2)
-        game.team_b_average_price = round(mean([p['outcomes']['team_b_price'] for p in all_game_odds]),2)
         for odds in all_game_odds:
             bookmaker_key = odds['bookmaker_key']
             outcomes      = odds['outcomes']
@@ -154,10 +152,13 @@ def get_results(regions='all', outcomes=2):
             game.arbitage_available = True
             game.arbitage_bookeeper_left = left_bets[0][2]
             game.arbitage_bookeeper_right = right_bets[0][2]
-            pr.ok(f"[o] Arbitage bet located {game.arbitage_bookeeper_left} : {game.arbitage_bookeeper_right}")
+            pr.ok(f"Arbitage Bet Found | {game.sport} | {game.team_a} vs {game.team_b} | {game.start_date} {game.start_time} \n"
+                  f"\t {game.arbitage_bookeeper_left} {team_a_price} : {game.arbitage_bookeeper_right} {team_b_price}")
+            rgames.append(game)
+        game.team_a_average_price = round(mean([p['outcomes']['team_a_price'] for p in all_game_odds]), 2)
+        game.team_b_average_price = round(mean([p['outcomes']['team_b_price'] for p in all_game_odds]), 2)
         left_bets = []
         right_bets = []
-        rgames.append(game)
     """
     Check all of the odds for outcomes with a price > 2.1 on one side and an equal or increased on the other side
     """

@@ -48856,3 +48856,11 @@ html {
 }
 
 /*end-variables base-font-size*/
+
+.nav-on {
+    padding: 10px 0;
+    border-width: 0;
+    border-bottom-width: 3px;
+    border-bottom-color: #7391c4 !important;
+    color: #7391c4 !important;
+}
