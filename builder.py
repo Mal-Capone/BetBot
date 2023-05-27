@@ -25,6 +25,7 @@ def results_header():
             <div class="table100 ver4 m-b-110">
                 <div class="table100-head">
                     <table>
+                        <caption>Results From UBO Bot</caption>
                         <thead>
                             <tr class="row100 head">
                                 {HEADER_ROW}
@@ -59,7 +60,7 @@ def results(response):
             for key, value in game.__dict__.items():
                 if key.lower() in columns:
                     i += 1
-                    data_row += f'<td class="cell100 column col{i}">{str(value).title()}</td>'
+                    data_row += f'<td class="cell100 column col{i}" style="">{str(value).title()}</td>'
             data_rows += row.format(CELLS=data_row)
             data_row = ''
             i = 0

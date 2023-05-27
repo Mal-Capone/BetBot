@@ -102,15 +102,20 @@ def findMatches(count, regions, outcomes):
 
     odds_response = get_response(regions=regions)
     all_games = [Game(game) for game in odds_response if len(game['bookmakers'][0]['markets'][0]['outcomes']) <= outcomes]
-    # for game in odds_response:
-    # all_games  = []
-    #     if len(game['bookmakers'][0]['markets'][0]['outcomes']) <= outcomes:
-    #         all_games.append(Game(game))
     for game in all_games:
         i += 1
+        lst_a, lst_b= [], []
         outcomes = []
         pr.ok(f'[{str(i).ljust(2,"0")}]  {str(game.sport).title()}: ({game.team_a}) vs ({game.team_b}) | Start Time: {game.start_date} {str(game.start_time).strip("Z")} | Checking {len(game.available_bookmakers)} bookmakers')
         for bookmaker in game.available_bookmakers:
+            team_a_name  = bookmaker['markets'][0]['outcomes'][0]['name']
+            team_b_name  = bookmaker['markets'][0]['outcomes'][1]['name']
+            team_a_price = bookmaker['markets'][0]['outcomes'][0]['price']
+            team_b_price = bookmaker['markets'][0]['outcomes'][1]['price']
+            if team_a_price >= 2.1:
+                lst_a.append((team_a_name,team_a_price))
+            if team_b_price >= 2.1:
+                lst_b.append((team_b_name, team_b_price))
             result = {
                 'bookmaker_key': bookmaker['key'],
                 'outcomes': {
@@ -135,7 +140,7 @@ def get_results(regions='all', outcomes=2):
     left_bets  = []
     right_bets = []
     rgames = []
-    game_odds, all_games = findMatches(100,regions, outcomes)
+    game_odds, all_games = findMatches(100, regions, outcomes)
     for game_id, all_game_odds in game_odds.items():
         game = [x for x in all_games if x.id == game_id][0]
         for odds in all_game_odds:

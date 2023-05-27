@@ -99,6 +99,10 @@ th, td {
     padding : 3px;
 }
 
+.col* {
+    word-wrap: unset;
+}
+
 .col1 {
     width: 8%;
 }
@@ -115,13 +119,13 @@ th, td {
     width: 13%;
 }
 .col6 {
-    width: 6%;
+    width: 8%;
 }
 .col7 {
     width: 13%;
 }
 .col8 {
-    width: 6%;
+    width: 8%;
 }
 
 .table100-head th {
