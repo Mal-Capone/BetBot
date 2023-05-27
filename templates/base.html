@@ -51,11 +51,14 @@
                             <script type="text/javascript">
                                 window.onload = nav
                                 function nav() {
-                                    let link =document.getElementById(document.location.href.split("/")[3])
-                                    let anchor = document.getElementById(link.id)
-                                        anchor.classList.add('active')
-
-                                }
+                                    let link_id;
+                                    let link = document.getElementById(document.location.href.split("/")[3]);
+                                    if(link){
+                                        link_id = link.id}
+                                    else {
+                                        link_id = 'index'}
+                                    let anchor = document.getElementById(link_id)
+                                    anchor.classList.add('active')}
                             </script>
                             {% block scripts %}
                             {% endblock scripts %}

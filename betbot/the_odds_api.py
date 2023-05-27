@@ -3,8 +3,8 @@
 import os
 import requests
 import configparser
-from statistics import mean
-from lib.utils import Printer as pr
+from   statistics import mean
+from   lib.utils import Printer as pr
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -125,6 +125,7 @@ def findMatches(count, regions, outcomes):
                     print(f'\t > {result["outcomes"]["team_a_name"]} : {str(result["outcomes"]["team_a_price"]).ljust(4,"0")} | {result["outcomes"]["team_b_name"]} : {str(result["outcomes"]["team_b_price"]).ljust(4,"0")} : {bookmaker["title"]} ')
             game_odds[game.id] = outcomes
     return game_odds, all_games
+
 def get_results(regions='all', outcomes=2):
     """
         Finds all the current available bets which match the criteria for a surebet
