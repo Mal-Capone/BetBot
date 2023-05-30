@@ -53,10 +53,21 @@
                                 function nav() {
                                     let link_id;
                                     let link = document.getElementById(document.location.href.split("/")[3]);
-                                    if(link){
-                                        link_id = link.id}
+                                    if(!link){
+                                        link_id = 'index';
+                                    }
                                     else {
-                                        link_id = 'index'}
+                                        if(link === 'get_results'){
+                                            link_id = 'results';
+                                        }
+                                        else{
+                                            link_id = link.id;
+                                        }
+                                    }
+                                    // if(link){
+                                    //     link_id = link.id}
+                                    // else {
+                                    //     link_id = 'index'}
                                     let anchor = document.getElementById(link_id)
                                     anchor.classList.add('active')}
                             </script>
