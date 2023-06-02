@@ -4,7 +4,8 @@ from flask import Flask
 from flask import render_template, request
 from betbot import the_odds_api
 import builder
-
+import datetime
+from datetime import date
 app = Flask(__name__)
 
 @app.route('/')
@@ -26,18 +27,19 @@ def results():
 
 @app.route('/get_results', methods=['GET', 'POST'])
 def bets():
-    data = request.form
-    regions = str(data['ddRegions'])
+    data     = request.form
+    regions  = str(data['ddRegions'])
     outcomes =  int(data['ddOutcomes'])
     response = the_odds_api.get_results(regions, outcomes)
     if builder.results(response):
         quota, used_req, this_cost = response['quota']
-        total = int(quota) + int(used_req)
+        # total = int(quota) + int(used_req)
+        total = 7
         o, r = builder.results_form(regions,outcomes)
         html = render_template("results.html", QUOTA=f'{quota} / {total}', COST=this_cost, REGIONS=r, OUTCOMES=o)
         return html
     else:
-        html = render_template('results.html',results='No Bets Checked')
+        html = render_template('results.html', results='No Bets Checked')
         return html
 
 if __name__ == '__main__':

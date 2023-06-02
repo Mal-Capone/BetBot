@@ -6,6 +6,8 @@ import configparser
 from   statistics import mean
 from   lib.utils import Printer as pr
 
+from betbot.bookmakers import load_data
+
 config = configparser.ConfigParser()
 config.read('config.ini')
 
@@ -65,7 +67,17 @@ class Game:
             for bookmaker in self.available_bookmakers:
                 markets = bookmaker['markets'][0]
                 o['game'] = self.id
-
+class Bookmaker:
+    def __init__(self, key):
+        self.key     = key if key else None
+        self.name    = None
+        self.website = None
+        self.region  = None
+    def lookup_bookmaker(self, key):
+        data = load_data()
+        self.name = data[key]['name']
+        self.region= data[key]['region']
+        self.website = data[key]['website']
 def get_response(regions=None,quota=False):
     try:
         API_KEY     = os.environ.get('THE_ODDS_API_KEY')
@@ -93,7 +105,6 @@ def get_response(regions=None,quota=False):
     except Exception as ex:
         print(f'[!] Exception: {ex}')
         return None
-
 def findMatches(regions, outcomes, verbose=False):
     i = 0
     game_odds  = {}
@@ -110,10 +121,13 @@ def findMatches(regions, outcomes, verbose=False):
             team_b_name  = bookmaker['markets'][0]['outcomes'][1]['name']
             team_a_price = bookmaker['markets'][0]['outcomes'][0]['price']
             team_b_price = bookmaker['markets'][0]['outcomes'][1]['price']
+
             if team_a_price >= 2.0:
                 lst_a.append((team_a_name,team_a_price, bookmaker['key']))
+
             if team_b_price >= 2.0:
                 lst_b.append((team_b_name, team_b_price, bookmaker['key']))
+
             result = {
                 'bookmaker_key': bookmaker['key'],
                 'outcomes': {
@@ -123,10 +137,12 @@ def findMatches(regions, outcomes, verbose=False):
                                 'team_b_price': bookmaker['markets'][0]['outcomes'][1]['price']
                             }}
             outcomes.append(result)
+
             if result:
                 if verbose:
                     print(f'\t > {result["outcomes"]["team_a_name"]} : {str(result["outcomes"]["team_a_price"]).ljust(4,"0")} | {result["outcomes"]["team_b_name"]} : {str(result["outcomes"]["team_b_price"]).ljust(4,"0")} : {bookmaker["title"]} ')
             game_odds[game.id] = outcomes
+
         if len(lst_b) and len(lst_a):
             maxlst_a = max(lst_a)
             maxlst_b = max(lst_b)
@@ -137,10 +153,12 @@ def findMatches(regions, outcomes, verbose=False):
             game.arbitage_right_price = maxlst_b[1]
             game.team_a_average_price = maxlst_a[1]
             game.team_b_average_price = maxlst_b[1]
-            pr.sep()
-            pr.info(f'''Arbitage bet found!\n\t> {str(game.sport).title()} {game.league} - {game.start_time} {game.start_date}\n\t> {game.team_a} ({game.arbitage_left_bookeeper}:{game.arbitage_left_price}) vs {game.team_b} ({game.arbitage_right_bookeeper}:{game.arbitage_right_price})''')
-            pr.sep()
+            print(f"> {pr.sep()}{pr.info('Arbitage bet found!')}")
+            print(f"> {str(game.sport).title()} {game.league} - {game.start_time} {game.start_date}")
+            print(f"> {game.team_a} ({game.arbitage_left_bookeeper}:{game.arbitage_left_price}) vs {game.team_b} ({game.arbitage_right_bookeeper}:{game.arbitage_right_price}){pr.sep()})")
+
         all_games_refined.append(game)
+
     return game_odds, all_games_refined
 
 def get_results(regions='all', outcomes=2):
@@ -164,13 +182,6 @@ def get_results(regions='all', outcomes=2):
                 left_bets.append([team_a_price, outcomes['team_a_name'], bookmaker_key])
             if team_b_price >= 2:
                 right_bets.append([team_b_price, outcomes['team_b_name'], bookmaker_key])
-        if len(right_bets) and len(left_bets):
-            # game.arbitage_available = True
-            # game.arbitage_bookeeper_left = left_bets[0][2]
-            # game.arbitage_bookeeper_right = right_bets[0][2]
-            # pr.ok(f"Arbitage Bet Found | {game.sport} | {game.team_a} vs {game.team_b} | {game.start_date} {game.start_time} \n"
-            #       f"\t {game.arbitage_bookeeper_left} {team_a_price} : {game.arbitage_bookeeper_right} {team_b_price}")
-            rgames.append(game)
         if not game.arbitage_available:
             game.team_a_average_price = round(mean([p['outcomes']['team_a_price'] for p in all_game_odds]), 2)
             game.team_b_average_price = round(mean([p['outcomes']['team_b_price'] for p in all_game_odds]), 2)
@@ -180,8 +191,10 @@ def get_results(regions='all', outcomes=2):
     response = {
         'game_odds' : game_odds,
         'all_games' : all_games,
-        'rgames'    : rgames,
+        # 'rgames'    : rgames,
         'quota'     : get_response(regions=regions,quota=True)
     }
     return response
 
+if __name__ == '__main__':
+    pass
