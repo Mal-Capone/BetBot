@@ -113,7 +113,7 @@ def findMatches(regions, outcomes, verbose=False):
     all_games_refined = []
     for game in all_games:
         i += 1
-        lst_a, lst_b= [], []
+        lst_a, lst_b = [], []
         outcomes = []
         pr.ok(f'[{str(i).ljust(2,"0")}]  {str(game.sport).title()}: ({game.team_a}) vs ({game.team_b}) | Start Time: {game.start_date} {str(game.start_time).strip("Z")} | Checking {len(game.available_bookmakers)} bookmakers')
         for bookmaker in game.available_bookmakers:
@@ -160,7 +160,6 @@ def findMatches(regions, outcomes, verbose=False):
         all_games_refined.append(game)
 
     return game_odds, all_games_refined
-
 def get_results(regions='all', outcomes=2):
     """
         Finds all the current available bets which match the criteria for a surebet

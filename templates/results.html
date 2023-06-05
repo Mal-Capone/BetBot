@@ -53,7 +53,7 @@ UnstoppableOdds Bot | SureBet Results
             Your remaining API quota is: {{ QUOTA }} : Last Scan Cost {{ COST }}
         </div>
         <div class="col-md-10 text-left px-3 mt-5" style="text-align: center !important; color:lightgrey">
-            {{ LAST_DATE }}
+            Last Scan: {{ LAST_DATE }}
     </div>
 </div>
 {% endblock content %}
@@ -70,8 +70,7 @@ UnstoppableOdds Bot | SureBet Results
         api_cost = this.document.getElementsByName('ddRegions')[0].value.split(",").length
         document.getElementById('lblCost').innerHTML = api_cost
     }
-
-
 </script>
 {% endblock scripts %}
 <!--endregion-->
+</div>

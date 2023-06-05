@@ -36,7 +36,7 @@ def bets():
         # total = int(quota) + int(used_req)
         total = 7
         o, r = builder.results_form(regions,outcomes)
-        html = render_template("results.html", QUOTA=f'{quota} / {total}', COST=this_cost, REGIONS=r, OUTCOMES=o)
+        html = render_template("results.html", QUOTA=f'{quota} / {total}', COST=this_cost, REGIONS=r, OUTCOMES=o, LAST_DATE=datetime.datetime.now())
         return html
     else:
         html = render_template('results.html', results='No Bets Checked')

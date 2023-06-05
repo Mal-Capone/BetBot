@@ -1,6 +1,9 @@
 import os
 import json
-from bs4 import BeautifulSoup
+
+# import bs4
+
+# frombs4 import BeautifulSoup
 from lib.utils import Printer as p
 
 
@@ -12,8 +15,9 @@ def load_data(k=None):
         html = ''
         if not os.path.exists('data/bookmakers.json'):
             html = build_data()
-        soup = BeautifulSoup(html,'lxml')
-        tables = [table for table in soup.findAll("table")]
+        # soup = bs4.BeautifulSoup(html,'lxml')
+        # tables = [table for table in soup.findAll("table")]
+        tables = []
         b = {}
         for tab in tables:
             for row in tab.findAll("tr")[1:]:
