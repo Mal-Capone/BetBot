@@ -3,9 +3,9 @@
 import os
 import requests
 import configparser
-from   statistics import mean
-from   lib.utils import Printer as pr
 
+from statistics import mean
+from lib.utils import Printer as pr
 from betbot.bookmakers import load_data
 
 config = configparser.ConfigParser()
