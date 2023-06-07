@@ -5,6 +5,7 @@ operations away from the main app.py
 """
 
 def results_form(region='all', outcomes=2):
+
     o = [
         {'opt': 2, 'sel': 'selected' if outcomes == 2 else ''},
         {'opt': 3, 'sel': 'selected' if outcomes == 3 else ''}

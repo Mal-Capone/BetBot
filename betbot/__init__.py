@@ -1,2 +1,2 @@
 # init
-from lib.utils import Printer as p
+from betbot.utils import Printer as p

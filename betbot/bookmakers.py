@@ -4,7 +4,7 @@ import json
 # import bs4
 
 # frombs4 import BeautifulSoup
-from lib.utils import Printer as p
+from betbot.utils import Printer as p
 
 
 def build_data():

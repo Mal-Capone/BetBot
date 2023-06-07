@@ -1,5 +1,5 @@
 # -----------IMPORTS----------#
-from lib.utils import Printer as p
+from betbot.utils import Printer as p
 url = "https://www.unibet.co.uk/"
 
 def main():
